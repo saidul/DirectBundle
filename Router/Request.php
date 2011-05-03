@@ -116,6 +116,8 @@ class Request
             $decoded = !is_array($decoded) ? array($decoded) : $decoded;
             
             array_walk_recursive($decoded, array($this, 'parseRawToArray'));
+            // @todo: check utf8 config option from bundle
+            array_walk_recursive($decoded, array($this, 'decode'));
 
             foreach ($decoded as $call) {
                 $calls[] = new Call((array)$call, 'single');
@@ -123,6 +125,19 @@ class Request
         }
         
         return $calls;
+    }
+
+    /**
+     * Force the utf8 decodification from all string values.
+     * 
+     * @param mixed $value
+     * @param string $key
+     */
+    public function decode(&$value, &$key)
+    {
+        if (is_string($value)) {
+            $value = utf8_decode($value);
+        }
     }
 
     /**
@@ -138,7 +153,7 @@ class Request
             $json = json_decode($value,true);
             
             if ($json) {
-                $value = $json;
+                $value = ($json);
             }
         }
 

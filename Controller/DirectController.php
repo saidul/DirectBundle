@@ -19,8 +19,11 @@ class DirectController extends Controller
         // instantiate the api object
         $api = new Api($this->container);
 
-        // return the json api description
-        return new Response("Ext.Direct.addProvider(".$api.");");
+        // create the response
+        $response = new Response("Ext.Direct.addProvider(".$api.");");
+        $response->headers->set('Content-Type', 'text/javascript');
+        
+        return $response;
     }
 
     /**
@@ -33,8 +36,10 @@ class DirectController extends Controller
         // instantiate the router object
         $router = new Router($this->container);
 
-        // return the routing result
-        return new Response($router->route());
-        //echo $router->route();
+        // create response
+        $response = new Response($router->route());
+        $response->headers->set('Content-Type', 'application/json');
+        
+        return $response;
     }
 }
